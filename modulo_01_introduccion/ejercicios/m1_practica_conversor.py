@@ -4,7 +4,8 @@ Lee el enunciado en PRACTICA_1.md.
 """
 
 # 1. Define aquí las constantes KM_POR_MILLA y KG_POR_LIBRA
-
+KM_POR_MILLA = 1.60934
+KG_POR_LIBRA = 0.453592
 
 def celsius_a_fahrenheit(grados):
     """Convierte grados Celsius a Fahrenheit."""
