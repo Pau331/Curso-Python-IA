@@ -13,7 +13,7 @@ def area_circulo(radio: float) -> float:
     >>> area_circulo(1)
     3.14
     """
-    raise NotImplementedError
+    return round(math.pi * radio ** 2, 2)
 
 
 def area_rectangulo(base: float, altura: float) -> float:
@@ -22,7 +22,7 @@ def area_rectangulo(base: float, altura: float) -> float:
     >>> area_rectangulo(3, 4)
     12
     """
-    raise NotImplementedError
+    return base * altura
 
 
 def area_triangulo(base: float, altura: float) -> float:
@@ -31,7 +31,7 @@ def area_triangulo(base: float, altura: float) -> float:
     >>> area_triangulo(3, 4)
     6.0
     """
-    raise NotImplementedError
+    return base * altura / 2
 
 
 def calcular_area(figura: str, *, radio=None, base=None, altura=None):
@@ -48,8 +48,20 @@ def calcular_area(figura: str, *, radio=None, base=None, altura=None):
     >>> calcular_area("triangulo", base=3) is None
     True
     """
-    raise NotImplementedError
-
+    figura = figura.strip().lower()
+    if figura == "circulo":
+        if radio is None:
+            return None
+        return area_circulo(radio)
+    elif figura == "rectangulo":
+        if base is None or altura is None:
+            return None
+        return area_rectangulo(base, altura)
+    elif figura == "triangulo":
+        if base is None or altura is None:
+            return None
+        return area_triangulo(base, altura)
+    return None
 
 def minimo_y_maximo(*numeros):
     """Devuelve una tupla (mínimo, máximo) con los números recibidos.
@@ -61,7 +73,12 @@ def minimo_y_maximo(*numeros):
     >>> minimo_y_maximo()
     (None, None)
     """
-    raise NotImplementedError
+    if len(numeros) == 0:
+        return (None, None)
+
+    minimo = min(numeros)
+    maximo = max(numeros)
+    return (minimo, maximo)
 
 
 def describir(funcion) -> str:
@@ -72,4 +89,8 @@ def describir(funcion) -> str:
     >>> describir(area_rectangulo)
     'area_rectangulo: Devuelve el área de un rectángulo.'
     """
-    raise NotImplementedError
+    nombre = funcion.__name__
+    docstring = funcion.__doc__
+    if docstring is None:
+        return f"{nombre}: sin documentar"
+    return f"{nombre}: {docstring.strip().splitlines()[0]}"
