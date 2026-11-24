@@ -11,7 +11,9 @@ def extremos(lista: list) -> tuple:
     >>> extremos([7])
     (7, 7)
     """
-    raise NotImplementedError
+    if not lista:
+        return None, None
+    return lista[0], lista[-1]
 
 
 def rotar(lista: list, posiciones: int = 1) -> list:
@@ -25,7 +27,12 @@ def rotar(lista: list, posiciones: int = 1) -> list:
     >>> rotar([1, 2, 3], 4)
     [2, 3, 1]
     """
-    raise NotImplementedError
+    if not lista:
+        return []
+    lista_nueva = lista[:]
+    for _ in range(posiciones):
+        lista_nueva.append(lista_nueva.pop(0))
+    return lista_nueva
 
 
 def segundo_mayor(numeros: list[float]) -> float | None:
@@ -38,7 +45,12 @@ def segundo_mayor(numeros: list[float]) -> float | None:
     >>> segundo_mayor([5, 5]) is None
     True
     """
-    raise NotImplementedError
+    numeros_sin_repetidos = list(set(numeros))
+    if len(numeros_sin_repetidos) < 2:
+        return None
+    numeros_sin_repetidos.sort(reverse=True)
+    return numeros_sin_repetidos[1]
+    
 
 
 def trocear(lista: list, tamano: int) -> list[list]:
@@ -49,7 +61,12 @@ def trocear(lista: list, tamano: int) -> list[list]:
     >>> trocear([1, 2, 3, 4, 5], 2)
     [[1, 2], [3, 4], [5]]
     """
-    raise NotImplementedError
+    lista_trozos = []
+    if tamano <= 0:
+        raise ValueError("El tamaño debe ser mayor que cero.")
+    for i in range(0, len(lista), tamano):
+        lista_trozos.append(lista[i:i + tamano])
+    return lista_trozos
     # Con comprensión: [lista[i:i + tamano] for i in range(0, len(lista), tamano)]
 
 
@@ -59,7 +76,12 @@ def sin_duplicados(lista: list) -> list:
     >>> sin_duplicados([3, 1, 3, 2, 1])
     [3, 1, 2]
     """
-    raise NotImplementedError
+    lista_sin_repetidos = []
+    for elemento in lista:
+        if elemento not in lista_sin_repetidos:
+            lista_sin_repetidos.append(elemento)
+    return lista_sin_repetidos
+    # Con la librería estándar: list(dict.fromkeys(lista))
 
 
 def insertar_ordenado(ordenada: list[float], valor: float) -> list[float]:
@@ -70,7 +92,14 @@ def insertar_ordenado(ordenada: list[float], valor: float) -> list[float]:
     >>> insertar_ordenado([1, 3, 5], 4)
     [1, 3, 4, 5]
     """
-    raise NotImplementedError
+    nueva_lista = ordenada[:]
+    for i, v in enumerate(nueva_lista):
+        if valor < v:
+            nueva_lista.insert(i, valor)
+            return nueva_lista
+    nueva_lista.append(valor)
+    return nueva_lista
+    
     # También vale sorted(ordenada + [valor]); la librería estándar tiene bisect.insort
 
 
@@ -82,4 +111,7 @@ def crear_tablero(filas: int, columnas: int, valor=0) -> list[list]:
     >>> crear_tablero(2, 3)
     [[0, 0, 0], [0, 0, 0]]
     """
-    raise NotImplementedError
+    tablero = []
+    for i in range(filas):
+        tablero.append([valor] * columnas)
+    return tablero

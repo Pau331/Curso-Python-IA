@@ -9,7 +9,7 @@ def elementos_comunes(a: list, b: list) -> list:
     >>> elementos_comunes([1, 2, 3, 4], [3, 4, 5, 6])
     [3, 4]
     """
-    raise NotImplementedError
+    return sorted(set(a) & set(b))
 
 
 def solo_en_una(a: list, b: list) -> list:
@@ -18,7 +18,7 @@ def solo_en_una(a: list, b: list) -> list:
     >>> solo_en_una([1, 2, 3], [3, 4])
     [1, 2, 4]
     """
-    raise NotImplementedError
+    return sorted(set(a) ^ set(b))
 
 
 def tiene_duplicados(elementos: list) -> bool:
@@ -27,7 +27,7 @@ def tiene_duplicados(elementos: list) -> bool:
     >>> tiene_duplicados([1, 2, 1])
     True
     """
-    raise NotImplementedError
+    return len(elementos) != len(set(elementos))
 
 
 def duplicados(elementos: list) -> list:
@@ -36,7 +36,14 @@ def duplicados(elementos: list) -> list:
     >>> duplicados([3, 1, 3, 2, 1, 3])
     [1, 3]
     """
-    raise NotImplementedError
+    duplicados_set = set()
+    vistos = set()
+    for elemento in elementos:
+        if elemento in vistos:
+            duplicados_set.add(elemento)
+        else:
+            vistos.add(elemento)
+    return sorted(duplicados_set)
 
 
 def es_pangrama(frase: str) -> bool:
@@ -49,7 +56,12 @@ def es_pangrama(frase: str) -> bool:
     >>> es_pangrama("Hola mundo")
     False
     """
-    raise NotImplementedError
+    alfabeto = set(string.ascii_lowercase)
+    frase_sin_espacios = frase.lower().strip().split()
+    letras_en_frase = set()
+    for palabra in frase_sin_espacios:
+        letras_en_frase.update(palabra)
+    return alfabeto.issubset(letras_en_frase)
 
 
 def permisos_que_faltan(requeridos: list[str], concedidos: list[str]) -> list[str]:
@@ -58,7 +70,7 @@ def permisos_que_faltan(requeridos: list[str], concedidos: list[str]) -> list[st
     >>> permisos_que_faltan(["leer", "escribir", "borrar"], ["leer", "admin"])
     ['borrar', 'escribir']
     """
-    raise NotImplementedError
+    return sorted(set(requeridos) - set(concedidos))
 
 
 def habilidades_compartidas(equipo: dict[str, list[str]]) -> list[str]:
@@ -70,5 +82,11 @@ def habilidades_compartidas(equipo: dict[str, list[str]]) -> list[str]:
     >>> habilidades_compartidas({"Ada": ["python", "sql"], "Linus": ["c", "python"]})
     ['python']
     """
-    raise NotImplementedError
+    if not equipo:
+        return []
+    listas = list(equipo.values())
+    comunes = set(listas[0])
+    for habilidades in listas[1:]:
+        comunes &= set(habilidades)
+    return sorted(comunes)
     # En una línea: sorted(set.intersection(*conjuntos))

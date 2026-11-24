@@ -14,7 +14,11 @@ def es_palindromo(texto: str) -> bool:
     >>> es_palindromo("Python")
     False
     """
-    raise NotImplementedError
+    texto = texto.lower().strip()
+    for caracter in texto:
+        if caracter not in "abcdefghijklmnopqrstuvwxyz0123456789":
+            texto = texto.replace(caracter, "")
+    return texto == texto[::-1]
 
 
 def contar_vocales(texto: str) -> int:
@@ -23,7 +27,13 @@ def contar_vocales(texto: str) -> int:
     >>> contar_vocales("Programación")
     5
     """
-    raise NotImplementedError
+    if not texto:
+        return 0
+    contador = 0
+    for caracter in texto.lower():
+        if caracter in VOCALES:
+            contador += 1
+    return contador
 
 
 def invertir_palabras(frase: str) -> str:
@@ -32,7 +42,10 @@ def invertir_palabras(frase: str) -> str:
     >>> invertir_palabras("  hola   mundo cruel ")
     'cruel mundo hola'
     """
-    raise NotImplementedError
+    palabras = frase.split()
+    if not palabras:
+        return ""
+    return " ".join(palabras[::-1])
 
 
 def a_snake_case(texto: str) -> str:
@@ -43,8 +56,11 @@ def a_snake_case(texto: str) -> str:
     >>> a_snake_case("  codigo-postal ")
     'codigo_postal'
     """
-    raise NotImplementedError
-
+    texto = texto.strip().replace("-", " ")
+    palabras = texto.split()
+    if not palabras:
+        return ""
+    return "_".join(palabra.lower() for palabra in palabras)
 
 def enmascarar(numero: str, visibles: int = 4) -> str:
     """Sustituye por asteriscos todos los caracteres salvo los últimos ``visibles``.
@@ -56,7 +72,11 @@ def enmascarar(numero: str, visibles: int = 4) -> str:
     >>> enmascarar("123")
     '123'
     """
-    raise NotImplementedError
+    if len(numero) <= visibles:
+        return numero
+    if visibles == 0:
+        return "*" * len(numero)
+    return "*" * len(numero[:-visibles]) + numero[-visibles:]
     # Cuidado con numero[-visibles:]: si visibles es 0, numero[-0:] es la cadena entera
 
 
@@ -68,7 +88,9 @@ def son_anagramas(a: str, b: str) -> bool:
     >>> son_anagramas("Roma", "amor")
     True
     """
-    raise NotImplementedError
+    a = a.lower().replace(" ", "")
+    b = b.lower().replace(" ", "")
+    return sorted(a) == sorted(b)
 
 
 def parsear_configuracion(texto: str) -> dict[str, str]:
@@ -81,7 +103,15 @@ def parsear_configuracion(texto: str) -> dict[str, str]:
     >>> parsear_configuracion("host = localhost; puerto=8080;; modo=debug")
     {'host': 'localhost', 'puerto': '8080', 'modo': 'debug'}
     """
-    raise NotImplementedError
+    config = {}
+    for fragmento in texto.split(";"):
+        if "=" in fragmento:
+            clave, valor = fragmento.split("=", 1)
+            clave = clave.strip()
+            valor = valor.strip()
+            if clave:
+                config[clave] = valor
+    return config
 
 
 def formatear_tabla(filas: list[tuple[str, float]]) -> str:
@@ -95,4 +125,7 @@ def formatear_tabla(filas: list[tuple[str, float]]) -> str:
     teclado          45.00
     monitor         189.50
     """
-    raise NotImplementedError
+    tabla = []
+    for nombre, importe in filas:
+        tabla.append(f"{nombre:<12}{importe:>10.2f}")
+    return "\n".join(tabla)
