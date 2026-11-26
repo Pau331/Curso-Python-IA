@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% from "_mascota.html" import mascota %}
+{% block contenido %}
+
+{# Iconos de cada capítulo para el álbum de recuerdos #}
+{% set iconos_tema = {"parque": "🌳", "bosque": "🍄", "cueva": "💎", "ciudad": "🏙️", "casa": "🏡"} %}
+
+<section class="final">
+  <div class="escena-final">
+    {# --- La ilustración: atardecer frente a casa ----------------------------- #}
+    <svg class="paisaje-final" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="cielo-final" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8f7ad8"/>
+          <stop offset="0.38" stop-color="#f49aa0"/>
+          <stop offset="0.7" stop-color="#ffc58f"/>
+          <stop offset="1" stop-color="#ffe6b8"/>
+        </linearGradient>
+        <radialGradient id="brillo-sol">
+          <stop offset="0" stop-color="#fff6c9" stop-opacity="0.95"/>
+          <stop offset="0.35" stop-color="#ffd36b" stop-opacity="0.55"/>
+          <stop offset="1" stop-color="#ffb36b" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="luz-puerta" cx="0.5" cy="1" r="1">
+          <stop offset="0" stop-color="#fff3b0" stop-opacity="0.9"/>
+          <stop offset="1" stop-color="#ffd76b" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="tejado" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e0645b"/>
+          <stop offset="1" stop-color="#b8443f"/>
+        </linearGradient>
+        <pattern id="tejas" width="22" height="14" patternUnits="userSpaceOnUse">
+          <path d="M0 14 Q11 4 22 14" fill="none" stroke="#9e3934" stroke-width="2" opacity="0.5"/>
+        </pattern>
+      </defs>
+
+      <!-- cielo, estrellas que empiezan a salir y sol poniéndose -->
+      <rect width="800" height="440" fill="url(#cielo-final)"/>
+      <g class="estrellas" fill="#fff">
+        <circle cx="60" cy="40" r="2"/><circle cx="150" cy="70" r="1.5"/><circle cx="250" cy="28" r="2"/>
+        <circle cx="470" cy="50" r="1.5"/><circle cx="560" cy="22" r="2"/><circle cx="740" cy="58" r="1.8"/>
+        <circle cx="360" cy="80" r="1.2"/><circle cx="680" cy="30" r="1.2"/>
+      </g>
+      <circle cx="610" cy="250" r="150" fill="url(#brillo-sol)"/>
+      <circle cx="610" cy="250" r="54" fill="#ffe08a"/>
+
+      <!-- nubes que pasan despacio -->
+      <g class="nube nube-1" fill="#fff" opacity="0.75">
+        <ellipse cx="120" cy="120" rx="46" ry="16"/><ellipse cx="150" cy="108" rx="30" ry="18"/><ellipse cx="96" cy="112" rx="22" ry="13"/>
+      </g>
+      <g class="nube nube-2" fill="#ffeef0" opacity="0.65">
+        <ellipse cx="500" cy="150" rx="40" ry="12"/><ellipse cx="524" cy="140" rx="24" ry="14"/>
+      </g>
+
+      <!-- colinas lejanas -->
+      <path d="M0 300 Q120 230 260 280 T520 270 T800 250 V440 H0 Z" fill="#c79ad1" opacity="0.7"/>
+      <path d="M0 320 Q160 270 330 310 T660 300 T800 290 V440 H0 Z" fill="#9fc98a"/>
+      <!-- césped -->
+      <path d="M0 350 Q200 330 400 345 T800 340 V440 H0 Z" fill="#83bf68"/>
+      <path d="M0 395 Q250 380 500 392 T800 388 V440 H0 Z" fill="#74b05a"/>
+
+      <!-- camino de tierra hasta la puerta -->
+      <path d="M296 346 L344 346 Q380 400 470 440 L180 440 Q270 400 296 346 Z" fill="#f2d6a2"/>
+      <path d="M300 360 l-14 6 M330 380 l18 4 M270 410 l-20 5 M370 420 l22 3" stroke="#d9b67c" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- valla -->
+      <g fill="#fff4e2" stroke="#d8c3a2" stroke-width="2">
+        <rect x="10" y="332" width="170" height="8" rx="3"/>
+        <rect x="10" y="352" width="170" height="8" rx="3"/>
+        {% for x in range(18, 180, 26) %}
+          <path d="M{{ x }} 372 V326 l8 -10 l8 10 V372 Z"/>
+        {% endfor %}
+      </g>
+
+      <!-- la casa -->
+      <g class="casa-final">
+        <rect x="206" y="196" width="228" height="152" fill="#f7e5c6"/>
+        <rect x="206" y="196" width="228" height="152" fill="none" stroke="#e3cda6" stroke-width="3"/>
+        <path d="M206 300 H434" stroke="#ead4ae" stroke-width="2"/>
+        <!-- chimenea con humo -->
+        <rect x="380" y="118" width="28" height="60" fill="#a9463f"/>
+        <rect x="375" y="112" width="38" height="10" rx="3" fill="#8e3a34"/>
+        <g class="humo" fill="#fff" opacity="0.6">
+          <circle cx="394" cy="98" r="9"/><circle cx="402" cy="78" r="12"/><circle cx="392" cy="54" r="15"/>
+        </g>
+        <!-- tejado -->
+        <path d="M188 204 L320 104 L452 204 Z" fill="url(#tejado)"/>
+        <path d="M188 204 L320 104 L452 204 Z" fill="url(#tejas)"/>
+        <path d="M182 206 L320 100 L458 206" fill="none" stroke="#8e3a34" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- ventanita redonda del desván -->
+        <circle cx="320" cy="164" r="18" fill="#ffd96b" stroke="#fff" stroke-width="5"/>
+        <path d="M320 146 V182 M302 164 H338" stroke="#fff" stroke-width="3"/>
+        <!-- guirnalda de banderines -->
+        <path d="M214 214 Q320 250 426 214" fill="none" stroke="#7a5a8c" stroke-width="2"/>
+        {% set banderines = ["#ff7a59", "#f2b632", "#4fa37b", "#5b8bd9", "#e86fa7", "#ff7a59", "#f2b632", "#4fa37b", "#5b8bd9"] %}
+        {% for color in banderines %}
+          {% set t = loop.index / 10 %}
+          {% set bx = 214 + 212 * t %}
+          {% set by = 214 + 72 * t * (1 - t) %}
+          <path d="M{{ bx - 8 }} {{ by }} L{{ bx + 8 }} {{ by }} L{{ bx }} {{ by + 16 }} Z" fill="{{ color }}"/>
+        {% endfor %}
+        <!-- ventanas con luz cálida -->
+        {% for wx in [228, 360] %}
+          <rect x="{{ wx }}" y="252" width="52" height="46" rx="4" fill="#ffd96b"/>
+          <rect x="{{ wx }}" y="252" width="52" height="46" rx="4" fill="none" stroke="#fff" stroke-width="5"/>
+          <path d="M{{ wx + 26 }} 252 V298 M{{ wx }} 275 H{{ wx + 52 }}" stroke="#fff" stroke-width="3"/>
+          <path d="M{{ wx + 6 }} 256 Q{{ wx + 18 }} 270 {{ wx + 8 }} 294" stroke="#ff9f7a" stroke-width="5" fill="none" opacity="0.6"/>
+          <!-- jardinera -->
+          <rect x="{{ wx - 4 }}" y="300" width="60" height="12" rx="3" fill="#a0603a"/>
+          <circle cx="{{ wx + 6 }}" cy="298" r="6" fill="#ff7a8a"/><circle cx="{{ wx + 20 }}" cy="296" r="6" fill="#ffd34d"/>
+          <circle cx="{{ wx + 34 }}" cy="298" r="6" fill="#ff7a8a"/><circle cx="{{ wx + 48 }}" cy="296" r="6" fill="#b48cf2"/>
+        {% endfor %}
+        <!-- puerta abierta de par en par, con luz saliendo -->
+        <ellipse cx="320" cy="350" rx="70" ry="22" fill="url(#luz-puerta)"/>
+        <rect x="296" y="262" width="48" height="86" rx="22" fill="#fff0a8"/>
+        <path d="M296 284 Q296 262 318 262 L318 348 L282 360 L282 290 Z" fill="#8a5432"/>
+        <circle cx="290" cy="318" r="3" fill="#f2b632"/>
+        <rect x="290" y="344" width="60" height="8" rx="3" fill="#c49a6c"/>
+      </g>
+
+      <!-- árbol -->
+      <g class="arbol">
+        <path d="M718 380 Q712 320 724 270 L740 270 Q748 320 744 380 Z" fill="#8a5a3b"/>
+        <circle cx="732" cy="240" r="52" fill="#5fa65a"/>
+        <circle cx="690" cy="262" r="36" fill="#6db866"/>
+        <circle cx="772" cy="262" r="34" fill="#559c52"/>
+        <circle cx="736" cy="200" r="34" fill="#74c06c"/>
+        <circle cx="712" cy="232" r="5" fill="#ff6f6f"/><circle cx="756" cy="250" r="5" fill="#ff6f6f"/><circle cx="740" cy="214" r="5" fill="#ff6f6f"/>
+      </g>
+
+      <!-- flores en el césped -->
+      {% for fx, fy, color in [(40, 400, "#ff7a8a"), (90, 418, "#ffd34d"), (150, 396, "#b48cf2"), (520, 410, "#ff7a8a"),
+                                (600, 424, "#ffd34d"), (690, 404, "#ffffff"), (760, 420, "#ff7a8a"), (470, 372, "#b48cf2")] %}
+        <path d="M{{ fx }} {{ fy + 14 }} V{{ fy + 2 }}" stroke="#4f8f45" stroke-width="2"/>
+        <circle cx="{{ fx - 4 }}" cy="{{ fy }}" r="4" fill="{{ color }}"/><circle cx="{{ fx + 4 }}" cy="{{ fy }}" r="4" fill="{{ color }}"/>
+        <circle cx="{{ fx }}" cy="{{ fy - 4 }}" r="4" fill="{{ color }}"/><circle cx="{{ fx }}" cy="{{ fy + 4 }}" r="4" fill="{{ color }}"/>
+        <circle cx="{{ fx }}" cy="{{ fy }}" r="2.5" fill="#f2b632"/>
+      {% endfor %}
+
+      <!-- el dueño, de rodillas y con los brazos abiertos -->
+      <g class="dueno-final">
+        <ellipse cx="508" cy="392" rx="46" ry="8" fill="rgba(59,53,80,0.18)"/>
+        <!-- piernas (una rodilla en el suelo) -->
+        <path d="M486 330 Q480 372 470 388 L500 390 Q506 364 508 336 Z" fill="#3b3550"/>
+        <path d="M512 336 Q540 344 548 364 L546 390 L528 390 L528 366 Q514 360 506 352 Z" fill="#46405e"/>
+        <ellipse cx="478" cy="390" rx="16" ry="6" fill="#2b2233"/>
+        <ellipse cx="540" cy="391" rx="14" ry="6" fill="#2b2233"/>
+        <!-- cuerpo -->
+        <path d="M478 282 Q506 266 534 282 L530 344 Q506 352 482 344 Z" fill="#5b8bd9"/>
+        <path d="M494 276 L506 296 L518 276" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- brazos abiertos hacia la mascota -->
+        <path d="M482 290 Q458 270 450 244" stroke="#5b8bd9" stroke-width="15" fill="none" stroke-linecap="round"/>
+        <path d="M530 290 Q560 282 576 260" stroke="#5b8bd9" stroke-width="15" fill="none" stroke-linecap="round"/>
+        <circle cx="448" cy="238" r="9" fill="#e8b48f"/>
+        <circle cx="580" cy="254" r="9" fill="#e8b48f"/>
+        <!-- cabeza -->
+        <rect x="498" y="256" width="16" height="14" fill="#e0a982"/>
+        <circle cx="506" cy="236" r="26" fill="#e8b48f"/>
+        <path d="M478 236 Q474 204 506 204 Q540 204 534 238 Q530 222 516 218 Q498 226 482 224 Z" fill="#4a3426"/>
+        <!-- ojos cerrados de alegría, mofletes y sonrisa -->
+        <path d="M492 238 Q497 232 502 238 M512 238 Q517 232 522 238" stroke="#2b2233" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="490" cy="248" rx="5" ry="3" fill="#ff7f8c" opacity="0.6"/>
+        <ellipse cx="524" cy="248" rx="5" ry="3" fill="#ff7f8c" opacity="0.6"/>
+        <path d="M498 250 Q507 262 516 250 Z" fill="#8c2f3f"/>
+        <!-- lagrimita de felicidad -->
+        <path class="lagrima" d="M526 242 Q523 250 526 254 Q530 250 526 242" fill="#7cc4f2"/>
+      </g>
+
+      <!-- luciérnagas -->
+      <g class="luciernagas" fill="#fff6a8">
+        <circle cx="120" cy="300" r="3"/><circle cx="660" cy="320" r="3"/><circle cx="430" cy="160" r="2.5"/>
+        <circle cx="560" cy="200" r="2.5"/><circle cx="200" cy="250" r="2.5"/>
+      </g>
+
+      <!-- pancarta -->
+      <g class="pancarta">
+        <path d="M150 22 H650 L630 44 L650 66 H150 L170 44 Z" fill="#fffdfb" opacity="0.95"/>
+        <path d="M150 22 L126 30 L140 44 L126 58 L150 66 Z M650 22 L674 30 L660 44 L674 58 L650 66 Z" fill="#ff7a59"/>
+        <text x="400" y="52" text-anchor="middle" font-family="Poppins, system-ui, sans-serif" font-weight="700" font-size="24" fill="#3b3550">
+          ¡Bienvenido a casa, {{ m.nombre }}!
+        </text>
+      </g>
+    </svg>
+
+    {# La mascota va encima del dibujo, saltando hacia los brazos de su dueño #}
+    <div class="mascota-final">{{ mascota("feliz", "salto-final", m.lleva_gafas()) }}</div>
+
+    {# Corazones que suben #}
+    <div class="corazones-final" aria-hidden="true">
+      {% for i in range(9) %}
+        <span style="left: {{ 52 + (i * 37) % 26 }}%; animation-delay: {{ (i * 0.7) % 5 }}s; font-size: {{ 1 + (i % 3) * 0.45 }}rem;">{{ ["❤️", "💖", "💕"][i % 3] }}</span>
+      {% endfor %}
+    </div>
+
+    {# Confeti que cae #}
+    <div class="confeti" aria-hidden="true">
+      {% for i in range(28) %}
+        <i style="left: {{ (i * 37) % 100 }}%; background: {{ ['#ff7a59', '#f2b632', '#4fa37b', '#5b8bd9', '#e86fa7', '#b48cf2'][i % 6] }};
+                  animation-delay: {{ (i * 0.43) % 6 }}s; animation-duration: {{ 5 + (i % 5) }}s;
+                  {{ 'border-radius: 50%;' if i % 3 == 0 }}"></i>
+      {% endfor %}
+    </div>
+  </div>
+
+  <h1>¡{{ m.nombre }} ha vuelto a casa!</h1>
+  <p class="texto-final">{{ texto }}</p>
+
+  {# --- Álbum de recuerdos del viaje ------------------------------------------ #}
+  <h2 class="titulo-album">Recuerdos del viaje</h2>
+  <div class="album">
+    {% for r in recuerdos %}
+      <figure class="polaroid" style="--giro: {{ [-4, 3, -2, 4, -3][loop.index0] }}deg;">
+        <div class="foto" style="background: linear-gradient({{ r.colores.cielo }} 0 62%, {{ r.colores.suelo }} 62% 80%, {{ r.colores.suelo_oscuro }} 80%);">
+          <span>{{ iconos_tema[r.tema] }}</span>
+          {% if r.sin_fallos %}<b class="sin-fallos" title="Superado sin perder ninguna vida">★</b>{% endif %}
+        </div>
+        <figcaption>
+          <strong>{{ r.numero }}. {{ r.nombre }}</strong>
+          <small>{% if r.tiempo is not none %}Mejor tiempo: {{ r.tiempo }} s{% else %}—{% endif %}</small>
+        </figcaption>
+      </figure>
+    {% endfor %}
+  </div>
+
+  {# --- Logros ------------------------------------------------------------------ #}
+  <div class="logros">
+    {% for l in logros %}
+      <div class="logro {{ 'conseguido' if l.conseguido }}">
+        <span class="icono-logro">{{ l.icono }}</span>
+        <div>
+          <strong>{{ l.nombre }}</strong>
+          <small>{{ "¡Conseguido!" if l.conseguido else l.como }}</small>
+        </div>
+      </div>
+    {% endfor %}
+    <div class="logro conseguido">
+      <span class="icono-logro">⏱️</span>
+      <div>
+        <strong>Tiempo total</strong>
+        <small>{{ tiempo_total ~ " s sumando tus mejores tiempos" if tiempo_total is not none else "—" }}</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="botones-final">
+    <a class="boton" href="/">Seguir cuidando a {{ m.nombre }}</a>
+    <a class="boton secundario" href="/historia">Repetir capítulos</a>
+    <a class="boton secundario" href="/estadisticas">Ver cómo ha ido el viaje</a>
+  </div>
+</section>
+
+{% endblock %}

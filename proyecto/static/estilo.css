@@ -1,0 +1,553 @@
+/* ==========================================================================
+   Rumbo a casa: un cuento ilustrado. Pared lila, suelo de madera,
+   formas redondas y una mascota que lo protagoniza todo.
+   ========================================================================== */
+
+@font-face { font-family: "Poppins"; src: url("fuentes/Poppins-Regular.ttf"); font-weight: 400; }
+@font-face { font-family: "Poppins"; src: url("fuentes/Poppins-Medium.ttf"); font-weight: 500; }
+@font-face { font-family: "Poppins"; src: url("fuentes/Poppins-Bold.ttf"); font-weight: 700; }
+
+:root {
+  --pared: #ece6ff;
+  --pared-oscura: #d9cffd;
+  --madera: #e9b98b;
+  --madera-oscura: #cf9a68;
+  --tinta: #3b3550;
+  --tinta-suave: #6e6785;
+  --blanco: #fffdfb;
+  --coral: #ff7a59;        /* acción principal */
+  --coral-oscuro: #e35f3f;
+  --menta: #4fa37b;        /* todo va bien */
+  --rojo: #e0485f;         /* necesidad baja */
+  --oro: #f2b632;
+  --radio: 22px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Poppins", system-ui, sans-serif;
+  color: var(--tinta);
+  background: var(--pared);
+  line-height: 1.5;
+}
+
+h1, h2, h3 { margin: 0; line-height: 1.15; }
+a { color: var(--coral-oscuro); }
+:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+/* --- Barra superior ------------------------------------------------------ */
+
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.1rem 1.5rem;
+}
+.marca { font-weight: 700; font-size: 1.35rem; color: var(--tinta); text-decoration: none; margin-right: auto; }
+.barra nav { display: flex; gap: 0.3rem; }
+.barra nav a { color: var(--tinta-suave); text-decoration: none; font-weight: 500; padding: 0.45rem 1rem; border-radius: 999px; }
+.barra nav a:hover { background: var(--pared-oscura); }
+.barra nav a.activo { background: var(--tinta); color: var(--blanco); }
+.monedas {
+  font-weight: 700;
+  background: var(--blanco);
+  padding: 0.4rem 1rem 0.4rem 0.7rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.monedas::before {
+  content: "";
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fde68f 0 30%, var(--oro) 32%);
+}
+
+main { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+.avisos { max-width: 1100px; margin: 0 auto 1rem; padding: 0 1.5rem; }
+.aviso {
+  background: var(--blanco);
+  border-left: 6px solid var(--coral);
+  border-radius: 12px;
+  padding: 0.8rem 1.1rem;
+  margin: 0 0 0.5rem;
+  font-weight: 500;
+}
+.aviso-fijo { margin-bottom: 1.5rem; }
+
+/* --- Botones -------------------------------------------------------------- */
+
+.boton {
+  display: inline-block;
+  font: 700 1rem "Poppins", sans-serif;
+  color: #fff;
+  background: var(--coral);
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.4rem;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 0 var(--coral-oscuro);
+}
+.boton:hover { filter: brightness(1.05); }
+.boton:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--coral-oscuro); }
+.boton.secundario { background: var(--blanco); color: var(--tinta); box-shadow: 0 4px 0 #cfc6ea; }
+.boton:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* --- La mascota ----------------------------------------------------------- */
+
+.mascota { display: block; overflow: visible; }
+.mascota.grande { width: 230px; height: 230px; }
+.mascota.mini { width: 56px; height: 56px; }
+.botando { animation: botar 2.4s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes botar {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  45% { transform: translateY(-6px) scale(0.98, 1.03); }
+  55% { transform: translateY(-6px) scale(0.98, 1.03); }
+}
+@media (prefers-reduced-motion: reduce) { .botando { animation: none; } }
+
+/* --- Bienvenida ----------------------------------------------------------- */
+
+.bienvenida {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 3rem;
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 3rem;
+  margin-top: 2rem;
+}
+.bienvenida h1 { font-size: clamp(2rem, 4vw, 2.8rem); }
+.bienvenida p { color: var(--tinta-suave); font-size: 1.1rem; max-width: 34rem; }
+.nombrar label { display: block; font-weight: 700; margin: 1.5rem 0 0.5rem; }
+.fila-form { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.fila-form input {
+  flex: 1; min-width: 200px;
+  font: 500 1.1rem "Poppins", sans-serif;
+  padding: 0.7rem 1.1rem;
+  border: 2px solid var(--pared-oscura);
+  border-radius: 999px;
+}
+
+/* --- Casa ----------------------------------------------------------------- */
+
+.casa { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; }
+
+.habitacion {
+  position: relative;
+  min-height: 420px;
+  border-radius: var(--radio);
+  overflow: hidden;
+  background: var(--pared-oscura);
+}
+.pared {
+  position: absolute; inset: 0 0 30% 0;
+  background:
+    radial-gradient(circle at 20px 20px, rgba(255,255,255,0.35) 3px, transparent 4px) 0 0 / 40px 40px,
+    #cfc2fb;
+}
+.ventana {
+  position: absolute; top: 40px; left: 8%;
+  width: 120px; height: 100px;
+  background: linear-gradient(#bfe3f5, #e6f5fc);
+  border: 8px solid var(--blanco);
+  border-radius: 14px;
+}
+.ventana::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 6px; margin-left: -3px; background: var(--blanco); }
+.cuadro {
+  position: absolute; top: 50px; right: 10%;
+  font-size: 2.2rem;
+  background: var(--blanco);
+  padding: 0.4rem 0.7rem;
+  border-radius: 10px;
+  transform: rotate(4deg);
+}
+.suelo-casa {
+  position: absolute; inset: 70% 0 0 0;
+  background: repeating-linear-gradient(90deg, var(--madera) 0 90px, var(--madera-oscura) 90px 92px);
+}
+.protagonista {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: 70px;
+}
+.protagonista h1 { font-size: 1.7rem; background: var(--blanco); padding: 0.2rem 1.2rem; border-radius: 999px; margin-top: 0.4rem; }
+.bocadillo {
+  position: relative;
+  background: var(--blanco);
+  padding: 0.55rem 1.1rem;
+  border-radius: 18px;
+  font-weight: 700;
+  margin: -40px 0 0.6rem;
+}
+.bocadillo::after {
+  content: ""; position: absolute; left: 50%; bottom: -10px; margin-left: -10px;
+  border: 10px solid transparent; border-top-color: var(--blanco); border-bottom: 0;
+}
+
+.panel-necesidades { background: var(--blanco); border-radius: var(--radio); padding: 1.5rem; }
+.panel-necesidades h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+.necesidad { display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.6rem; align-items: center; margin-bottom: 1rem; }
+.necesidad .icono { font-size: 1.6rem; text-align: center; }
+.etiqueta { display: flex; justify-content: space-between; font-weight: 500; font-size: 0.95rem; }
+.medidor { height: 12px; background: #efeaf9; border-radius: 6px; overflow: hidden; margin-top: 0.2rem; }
+.medidor span { display: block; height: 100%; border-radius: 6px; }
+.necesidad.verde .medidor span { background: var(--menta); }
+.necesidad.amarillo .medidor span { background: #f2b632; }
+.necesidad.rojo .medidor span { background: var(--rojo); }
+.necesidad.rojo .etiqueta b { color: var(--rojo); }
+
+.corazones { font-size: 1.6rem; color: var(--rojo); letter-spacing: 0.1em; line-height: 1; }
+.corazones .vacios { color: #e3dbf7; }
+.vidas-casa { border-top: 2px solid #efeaf9; margin-top: 1.2rem; padding-top: 1rem; }
+.nota { color: var(--tinta-suave); font-size: 0.88rem; margin: 0.5rem 0 0; }
+
+.acciones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1.5rem 0 2.5rem; }
+.accion {
+  display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+  font: 700 1.05rem "Poppins", sans-serif;
+  color: var(--tinta);
+  background: var(--blanco);
+  border: none;
+  border-radius: var(--radio);
+  padding: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 5px 0 #cfc6ea;
+}
+.icono-accion { font-size: 2rem; }
+.accion .cuenta { font-weight: 500; font-size: 0.82rem; color: var(--tinta-suave); }
+.accion:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: 0 5px 0 #e4ddf5; }
+.accion.en-curso { opacity: 1; box-shadow: 0 0 0 3px var(--coral); }
+
+/* Mientras hace un cuidado */
+.bocadillo.ocupado { min-width: 190px; text-align: center; }
+.progreso { height: 8px; background: #efeaf9; border-radius: 4px; overflow: hidden; margin-top: 0.35rem; }
+.progreso span { display: block; height: 100%; width: 0; background: var(--coral); border-radius: 4px; }
+.haciendo-comer .mascota { animation: masticar 0.35s ease-in-out infinite; transform-origin: 50% 100%; }
+.haciendo-jugar .mascota { animation: saltito 0.6s ease-in-out infinite; transform-origin: 50% 100%; }
+.haciendo-banar .mascota { animation: sacudir 0.3s ease-in-out infinite; transform-origin: 50% 100%; }
+.haciendo-siesta .mascota { animation: respirar 2s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes masticar { 50% { transform: scale(1.04, 0.96); } }
+@keyframes saltito { 50% { transform: translateY(-26px); } }
+@keyframes sacudir { 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
+@keyframes respirar { 50% { transform: scale(1.03, 0.98); } }
+.zzz { position: absolute; top: 120px; right: calc(50% - 150px); font-weight: 700; font-size: 1.4rem; color: var(--tinta-suave); letter-spacing: 0.2em; }
+.burbujas { position: absolute; top: 150px; font-size: 1.8rem; letter-spacing: 3rem; }
+@media (prefers-reduced-motion: reduce) {
+  .haciendo-comer .mascota, .haciendo-jugar .mascota, .haciendo-banar .mascota, .haciendo-siesta .mascota { animation: none; }
+}
+.accion:active { transform: translateY(4px); box-shadow: 0 1px 0 #cfc6ea; }
+.accion.aventura { background: var(--coral); color: #fff; box-shadow: 0 5px 0 var(--coral-oscuro); }
+.accion.aventura .cuenta { color: #fff; }
+.accion.aventura.bloqueada { opacity: 0.5; cursor: not-allowed; box-shadow: 0 5px 0 #e4ddf5; }
+
+.tienda h2 { font-size: 1.5rem; margin-top: 1rem; }
+.comidas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0 2rem; }
+.decoraciones { grid-template-columns: repeat(5, 1fr); }
+.producto {
+  position: relative;
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 1.3rem;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem;
+}
+.icono-producto { font-size: 2.8rem; line-height: 1; }
+.producto h3 { font-size: 1.1rem; }
+.producto p { margin: 0; color: var(--tinta-suave); font-size: 0.9rem; }
+.producto .cantidad { font-weight: 700; color: var(--tinta); margin-top: auto; }
+.producto .boton { width: 100%; }
+.producto .boton:first-of-type { margin-top: auto; }
+.producto.exclusivo { background: linear-gradient(160deg, #fff6dc, var(--blanco) 60%); box-shadow: inset 0 0 0 2px #f2d27a; }
+.producto.conseguido { box-shadow: inset 0 0 0 3px var(--menta); }
+.sello { position: absolute; top: 10px; right: 10px; font-size: 0.72rem; font-weight: 700; color: #9a6b00; background: #ffe7a3; padding: 0.1rem 0.6rem; border-radius: 999px; }
+
+/* Decoración colocada en la habitación: cada objeto tiene su sitio y su mueble */
+.deco { position: absolute; z-index: 1; line-height: 1; }
+.deco .objeto { position: relative; display: block; }
+.deco .icono-deco { display: block; filter: drop-shadow(0 5px 3px rgba(59, 53, 80, 0.18)); }
+
+/* Sombra en el suelo para lo que está apoyado en él */
+.deco-planta::after, .deco-castillo::after {
+  content: ""; position: absolute; z-index: -1;
+  left: 12%; right: 12%; bottom: -5px; height: 14px;
+  border-radius: 50%; background: rgba(59, 53, 80, 0.18);
+}
+
+/* Planta: en el rincón, se mece como si entrara brisa por la ventana */
+.deco-planta { font-size: 4.5rem; left: 3%; bottom: 13%; }
+.deco-planta .icono-deco { transform-origin: 50% 100%; animation: brisa 3.5s ease-in-out infinite alternate; }
+@keyframes brisa { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+
+/* Osito: sentado en una alfombrita redonda */
+.deco-osito { font-size: 3.2rem; left: 22%; bottom: 7%; }
+.deco-osito::before {
+  content: ""; position: absolute; z-index: -1;
+  left: -45%; right: -45%; bottom: -12px; height: 30px;
+  border-radius: 50%;
+  background: #ffd9cc;
+  box-shadow: inset 0 0 0 4px #ff9c80, inset 0 0 0 8px #ffd9cc, inset 0 0 0 10px #ffb59f;
+}
+.deco-osito .icono-deco { transform: rotate(-6deg); }
+
+/* Pecera: un acuario de cristal encima de un mueblecito, con el pez nadando */
+.deco-pecera { right: 5%; bottom: 26%; padding-bottom: 46px; }
+.deco-pecera::before {   /* el mueble */
+  content: ""; position: absolute; left: -8px; right: -8px; bottom: 0; height: 50px;
+  background: linear-gradient(var(--madera-oscura) 0 8px, var(--madera) 8px);
+  border-radius: 8px 8px 4px 4px;
+  box-shadow: inset 0 -4px 0 rgba(59, 53, 80, 0.12), 0 8px 10px -6px rgba(59, 53, 80, 0.35);
+}
+.deco-pecera .objeto {   /* el cristal con agua */
+  width: 112px; height: 78px; overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 10px 10px 14px 14px;
+  background:
+    linear-gradient(to top, #e9b98b 0 10px, transparent 10px),        /* arena */
+    linear-gradient(rgba(255, 255, 255, 0.6) 0 12px, #a7dcf2 12px, #6dbde2);
+}
+.deco-pecera .icono-deco {
+  position: absolute; top: 22px; left: 6px; font-size: 1.9rem;
+  animation: nadar 7s ease-in-out infinite;
+}
+.deco-pecera .objeto::after {   /* burbujas que suben */
+  content: ""; position: absolute; left: 78%; bottom: 10px; width: 7px; height: 7px;
+  border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.9);
+  animation: burbuja 2.6s ease-in infinite;
+}
+@keyframes nadar {
+  0%   { transform: translateX(0) scaleX(-1); }
+  45%  { transform: translateX(58px) scaleX(-1); }
+  50%  { transform: translateX(58px) scaleX(1); }
+  95%  { transform: translateX(0) scaleX(1); }
+  100% { transform: translateX(0) scaleX(-1); }
+}
+@keyframes burbuja {
+  0% { opacity: 0; transform: translateY(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-50px) translateX(4px); }
+}
+
+/* Castillo: el juguete grande, en primer plano */
+.deco-castillo { font-size: 4.4rem; right: 3%; bottom: 3%; z-index: 2; }
+
+/* Trofeo: lucido en una balda de la pared, con un destello de vez en cuando */
+.deco-trofeo { font-size: 2.6rem; left: calc(8% + 22px); top: 162px; }
+.deco-trofeo::after {   /* la balda */
+  content: ""; position: absolute; left: -26px; right: -26px; bottom: -9px; height: 9px;
+  background: var(--madera-oscura); border-radius: 4px;
+  box-shadow: 0 5px 0 rgba(59, 53, 80, 0.12);
+}
+.deco-trofeo::before {   /* el destello */
+  content: "✨"; position: absolute; right: -16px; top: -10px; font-size: 1rem;
+  animation: destello 2.8s ease-in-out infinite;
+}
+@keyframes destello { 0%, 60%, 100% { opacity: 0; transform: scale(0.4); } 75% { opacity: 1; transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .deco .icono-deco, .deco-pecera .objeto::after, .deco-trofeo::before { animation: none; }
+}
+
+.reiniciar { text-align: center; margin-top: 2.5rem; }
+.reiniciar button { background: none; border: none; color: var(--tinta-suave); text-decoration: underline; cursor: pointer; font: inherit; font-size: 0.9rem; }
+
+/* --- Historia (el camino) ------------------------------------------------- */
+
+.cabecera-historia { margin: 1rem 0 1.5rem; }
+.cabecera-historia h1 { font-size: clamp(2rem, 4vw, 2.8rem); }
+.cabecera-historia p { color: var(--tinta-suave); font-size: 1.1rem; margin: 0.3rem 0 0; }
+.info-vidas { background: var(--blanco); display: inline-block; padding: 0.6rem 1.2rem; border-radius: 999px; margin: 0 0 1.5rem; }
+
+.camino {
+  list-style: none; margin: 0; padding: 2.5rem 1rem;
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem;
+  background: var(--blanco);
+  border-radius: var(--radio);
+  position: relative;
+}
+.camino::before {  /* el sendero que une las paradas */
+  content: ""; position: absolute; left: 8%; right: 8%; top: calc(2.5rem + 42px);
+  border-top: 6px dashed #e3dbf7;
+}
+.parada { position: relative; text-align: center; }
+.parada:nth-child(even) { margin-top: 3rem; }
+.hito {
+  position: relative;
+  width: 84px; height: 84px; margin: 0 auto 0.6rem;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 1.8rem; font-weight: 700;
+  text-decoration: none;
+  color: var(--tinta);
+  background: #e9e4f5;
+  border: 5px solid var(--blanco);
+  box-shadow: 0 0 0 3px #e3dbf7;
+}
+.parada h2 { font-size: 1.02rem; }
+.parada p { margin: 0.1rem 0 0; font-size: 0.85rem; color: var(--tinta-suave); }
+.parada p.premio { font-weight: 700; color: #9a6b00; }
+.parada.disponible .hito { background: var(--coral); color: #fff; box-shadow: 0 0 0 4px var(--coral), 0 8px 18px rgba(255, 122, 89, 0.4); }
+.parada.completado .hito { background: var(--menta); color: #fff; box-shadow: 0 0 0 3px var(--menta); }
+.parada.bloqueado { opacity: 0.55; }
+.parada.destino .hito { background: #ffe7b8; }
+.hito[aria-disabled="true"] { pointer-events: none; filter: grayscale(0.6); }
+.aqui { position: absolute; top: -48px; left: 50%; margin-left: -28px; }
+
+/* --- Nivel ---------------------------------------------------------------- */
+
+.intro-nivel { max-width: 44rem; margin: 0.5rem 0 1.2rem; }
+.capitulo { margin: 0; font-weight: 700; color: var(--coral-oscuro); }
+.intro-nivel h1 { font-size: 2.2rem; }
+.intro-nivel p { color: var(--tinta-suave); font-size: 1.05rem; margin: 0.4rem 0 0; }
+.intro-nivel .capitulo { color: var(--coral-oscuro); }
+.aviso-vidas { display: inline-block; background: #dff3e8; color: #2f7a55 !important; font-weight: 700; padding: 0.4rem 1rem; border-radius: 999px; }
+
+.marco-juego { position: relative; border-radius: var(--radio); overflow: hidden; background: var(--tinta); }
+#pantalla { display: block; width: 100%; height: auto; image-rendering: auto; }
+
+.resultado {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  background: rgba(59, 53, 80, 0.82);
+  color: #fff;
+  padding: 2rem;
+}
+.resultado[hidden] { display: none; }
+.resultado h2 { font-size: 2.4rem; }
+.resultado p { font-size: 1.15rem; max-width: 34rem; }
+.resultado .botones { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.resultado.gana h2 { color: #9fe3bf; }
+.resultado.pierde h2 { color: #ffc2a8; }
+
+.controles-tactiles { display: none; justify-content: space-between; gap: 1rem; margin-top: 1rem; }
+.controles-tactiles button {
+  font: 700 1.4rem "Poppins", sans-serif;
+  border: none; border-radius: 18px;
+  background: var(--blanco); color: var(--tinta);
+  padding: 1rem 1.6rem;
+  touch-action: none;
+}
+.controles-tactiles .saltar { background: var(--coral); color: #fff; margin-left: auto; }
+@media (pointer: coarse) { .controles-tactiles { display: flex; } }
+
+.ayuda-nivel { color: var(--tinta-suave); text-align: center; margin-top: 1rem; }
+
+/* --- Final ---------------------------------------------------------------- */
+
+.final { text-align: center; padding-top: 1rem; }
+.escena-final {
+  position: relative; overflow: hidden;
+  aspect-ratio: 800 / 440; max-height: 70vh; margin: 0 auto 1.5rem;
+  border-radius: var(--radio);
+  box-shadow: 0 18px 40px rgba(59, 53, 80, 0.22);
+}
+.paisaje-final { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* La mascota salta hacia los brazos de su dueño */
+.mascota-final { position: absolute; left: 70%; bottom: 9%; width: 17%; z-index: 2; }
+.mascota-final .mascota { width: 100%; height: auto; }
+.salto-final { animation: salto-final 2.2s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes salto-final {
+  0%, 100% { transform: translate(0, 0) scale(1.05, 0.95); }
+  15% { transform: translate(0, 0) scale(0.95, 1.06); }
+  45% { transform: translate(-18%, -32%) rotate(-8deg); }
+  70% { transform: translate(-8%, -4%) rotate(-3deg); }
+  85% { transform: translate(0, 0) scale(1.06, 0.94); }
+}
+
+.nube { animation: nube 40s linear infinite alternate; }
+.nube-2 { animation-duration: 55s; animation-direction: alternate-reverse; }
+@keyframes nube { to { transform: translateX(90px); } }
+.humo circle { animation: humo 4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.humo circle:nth-child(2) { animation-delay: 1.3s; }
+.humo circle:nth-child(3) { animation-delay: 2.6s; }
+@keyframes humo { 0% { opacity: 0; transform: translateY(20px) scale(0.5); } 30% { opacity: 0.7; } 100% { opacity: 0; transform: translateY(-30px) scale(1.4); } }
+.estrellas circle, .luciernagas circle { animation: titilar 2.8s ease-in-out infinite alternate; }
+.estrellas circle:nth-child(odd), .luciernagas circle:nth-child(even) { animation-delay: 1.4s; }
+@keyframes titilar { from { opacity: 0.2; } to { opacity: 1; } }
+.arbol { animation: mecer 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 50% 100%; }
+@keyframes mecer { from { transform: rotate(-1.2deg); } to { transform: rotate(1.2deg); } }
+.dueno-final { animation: respirar 3s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+.lagrima { animation: lagrima 3s ease-in infinite; }
+@keyframes lagrima { 0%, 40% { opacity: 0; transform: translateY(0); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
+
+.corazones-final, .confeti { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.corazones-final span { position: absolute; bottom: 28%; opacity: 0; animation: corazon 5s ease-out infinite; }
+@keyframes corazon {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-20px, -220px) scale(1.2) rotate(-15deg); }
+}
+.confeti i { position: absolute; top: -12px; width: 8px; height: 13px; border-radius: 2px; opacity: 0.9; animation: confeti linear infinite; }
+@keyframes confeti {
+  0% { transform: translateY(0) rotate(0); }
+  100% { transform: translateY(520px) rotate(720deg) translateX(30px); }
+}
+
+.final h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+.texto-final { color: var(--tinta-suave); font-size: 1.15rem; max-width: 40rem; margin: 0.8rem auto 1.8rem; }
+
+/* Álbum de recuerdos */
+.titulo-album { font-size: 1.4rem; margin-bottom: 1rem; }
+.album { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 2rem; }
+.polaroid {
+  margin: 0; width: 150px; background: var(--blanco); padding: 10px 10px 12px;
+  box-shadow: 0 8px 18px rgba(59, 53, 80, 0.18); transform: rotate(var(--giro));
+  transition: transform 0.25s;
+}
+.polaroid:hover { transform: rotate(0) scale(1.08); z-index: 1; }
+.polaroid .foto { position: relative; height: 110px; display: grid; place-items: center; font-size: 2.8rem; }
+.polaroid .foto span { filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.2)); }
+.sin-fallos { position: absolute; top: 6px; right: 6px; font-size: 0.9rem; color: #fff; background: var(--oro); width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; }
+.polaroid figcaption { margin-top: 8px; display: grid; gap: 2px; }
+.polaroid strong { font-size: 0.9rem; }
+.polaroid small { color: var(--tinta-suave); font-size: 0.78rem; }
+
+/* Logros */
+.logros { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+.logro { display: flex; align-items: center; gap: 0.8rem; text-align: left; background: var(--blanco); border-radius: var(--radio); padding: 0.8rem 1.1rem; max-width: 300px; filter: grayscale(1); opacity: 0.6; }
+.logro.conseguido { filter: none; opacity: 1; box-shadow: inset 0 0 0 2px #f2d27a; }
+.icono-logro { font-size: 2rem; }
+.logro strong { display: block; }
+.logro small { color: var(--tinta-suave); font-size: 0.8rem; }
+
+.botones-final { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  .escena-final *, .salto-final { animation: none !important; }
+  .corazones-final, .confeti { display: none; }
+}
+
+/* --- Estadísticas ---------------------------------------------------------- */
+
+.totales { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.totales div { background: var(--blanco); border-radius: var(--radio); padding: 1.1rem; color: var(--tinta-suave); }
+.totales b { display: block; font-size: 2rem; color: var(--tinta); }
+.tarjeta-blanca { background: var(--blanco); border-radius: var(--radio); padding: 1.5rem; margin-bottom: 1.5rem; }
+.tarjeta-blanca h2 { font-size: 1.3rem; margin-bottom: 0.8rem; }
+.tarjeta-blanca img { width: 100%; max-width: 760px; display: block; margin: 0 auto; }
+.tabla { width: 100%; border-collapse: collapse; }
+.tabla th { text-align: left; color: var(--tinta-suave); font-weight: 500; padding: 0.5rem; border-bottom: 2px solid #efeaf9; }
+.tabla td { padding: 0.6rem 0.5rem; border-bottom: 1px solid #efeaf9; }
+
+/* --- Pantallas pequeñas ---------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .barra { flex-wrap: wrap; gap: 0.6rem; }
+  .casa, .bienvenida { grid-template-columns: 1fr; }
+  .bienvenida { padding: 1.5rem; justify-items: center; text-align: center; }
+  .acciones, .totales { grid-template-columns: repeat(2, 1fr); }
+  .comidas, .decoraciones { grid-template-columns: 1fr 1fr; }
+  .camino { grid-template-columns: repeat(3, 1fr); row-gap: 2rem; }
+  .camino::before { display: none; }
+  .parada:nth-child(even) { margin-top: 0; }
+}

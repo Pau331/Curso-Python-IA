@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Rumbo a casa{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body class="{% block clase_body %}{% endblock %}">
+  <header class="barra">
+    <a class="marca" href="/">Rumbo a casa</a>
+    {% if m %}
+    <nav>
+      <a href="/" class="{{ 'activo' if request.endpoint == 'casa' }}">Casa</a>
+      <a href="/historia" class="{{ 'activo' if request.endpoint in ('historia', 'nivel', 'final') }}">Aventura</a>
+      <a href="/estadisticas" class="{{ 'activo' if request.endpoint == 'estadisticas' }}">Estadísticas</a>
+    </nav>
+    <span class="monedas" title="Monedas">{{ m.monedas }}</span>
+    {% endif %}
+  </header>
+
+  {% with mensajes = get_flashed_messages() %}
+    {% if mensajes %}<div class="avisos">{% for mensaje in mensajes %}<p class="aviso">{{ mensaje }}</p>{% endfor %}</div>{% endif %}
+  {% endwith %}
+
+  <main>
+    {% block contenido %}{% endblock %}
+  </main>
+</body>
+</html>

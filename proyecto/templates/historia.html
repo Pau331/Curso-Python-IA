@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "_mascota.html" import mascota %}
+{% block contenido %}
+
+<section class="cabecera-historia">
+  <h1>El viaje de {{ m.nombre }}</h1>
+  <p>Cinco capítulos le separan de su dueño. Supera cada uno para desbloquear el siguiente.
+     Cada vez que llegas a la meta ganas un premio, también al repetir: ¡los últimos capítulos dan más!</p>
+</section>
+
+{% if not puede %}
+  <p class="aviso aviso-fijo">{{ motivo }} <a href="/">Volver a casa</a></p>
+{% else %}
+  <p class="info-vidas">
+    <span class="corazones">{{ "♥" * m.vidas }}<span class="vacios">{{ "♥" * (vidas_max - m.vidas) }}</span></span>
+    {% if recuperara %}Tiene todas las barras en verde: recuperará todas sus vidas al empezar.
+    {% elif m.vidas < vidas_max %}Saldrá con {{ m.vidas }} {{ 'vida' if m.vidas == 1 else 'vidas' }}. Ponle todas las barras en verde para recuperarlas.
+    {% else %}Saldrá con todas sus vidas.{% endif %}
+  </p>
+{% endif %}
+
+<ol class="camino">
+  {% for c in capitulos %}
+  <li class="parada {{ c.estado }} tema-{{ c.tema }}">
+    {% if c.estado == "bloqueado" %}
+      <div class="hito"><span>🔒</span></div>
+      <h2>{{ c.nombre }}</h2>
+      <p>Bloqueado</p>
+    {% else %}
+      <a class="hito" href="/nivel/{{ c.numero }}" {% if not puede %}aria-disabled="true"{% endif %}>
+        {% if c.estado == "completado" %}<span>✓</span>{% else %}<span>{{ c.numero }}</span>{% endif %}
+      </a>
+      <h2>{{ c.nombre }}</h2>
+      <p>{{ "Superado: puedes repetirlo" if c.estado == "completado" else "Siguiente parada" }}</p>
+      <p class="premio">🪙 {{ c.premio }} de premio + {{ c.monedas }} por el camino</p>
+      {% if c.estado == "disponible" %}<div class="aqui">{{ mascota(m.animo(), "mini", m.lleva_gafas()) }}</div>{% endif %}
+    {% endif %}
+  </li>
+  {% endfor %}
+  <li class="parada destino {{ 'completado' if m.historia_terminada }}">
+    <div class="hito"><span>🏡</span></div>
+    <h2>Casa</h2>
+    <p>{% if m.historia_terminada %}<a href="/final">Ver el reencuentro</a>{% else %}Su dueño le espera{% endif %}</p>
+  </li>
+</ol>
+
+{% endblock %}

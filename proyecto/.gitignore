@@ -1,0 +1,4 @@
+__pycache__/
+.pytest_cache/
+datos/partida.json
+datos/intentos.csv

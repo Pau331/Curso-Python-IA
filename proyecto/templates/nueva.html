@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_mascota.html" import mascota %}
+{% block contenido %}
+<section class="bienvenida">
+  {{ mascota("feliz", "grande botando") }}
+  <div>
+    <h1>Una mascota se ha perdido</h1>
+    <p>Esta criaturita se separó de su dueño en una excursión. Cuídala, dale de comer y acompáñala capítulo a capítulo en su viaje de vuelta a casa.</p>
+    <form method="post" action="/nueva" class="nombrar">
+      <label for="nombre">¿Cómo se llama?</label>
+      <div class="fila-form">
+        <input id="nombre" name="nombre" maxlength="15" required autocomplete="off" placeholder="Por ejemplo, Bruno">
+        <button class="boton">Adoptar</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

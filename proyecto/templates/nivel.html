@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}{{ nivel.nombre }} · Rumbo a casa{% endblock %}
+{% block contenido %}
+
+<section class="intro-nivel">
+  <p class="capitulo">Capítulo {{ numero }} de {{ total }}</p>
+  <h1>{{ nivel.nombre }}</h1>
+  <p>{{ historia }}</p>
+  {% if recuperadas %}<p class="aviso-vidas">Como todas sus barras estaban en verde, {{ m.nombre }} ha recuperado todas sus vidas.</p>{% endif %}
+</section>
+
+<div class="marco-juego">
+  <canvas id="pantalla" width="960" height="480" tabindex="0" aria-label="Nivel {{ nivel.nombre }}"></canvas>
+
+  <div id="resultado" class="resultado" hidden>
+    <h2></h2>
+    <p></p>
+    <div class="botones"></div>
+  </div>
+</div>
+
+<div class="controles-tactiles" aria-hidden="true">
+  <button data-control="izquierda">←</button>
+  <button data-control="derecha">→</button>
+  <button data-control="saltar" class="saltar">Saltar</button>
+</div>
+
+<p class="ayuda-nivel">Las vidas que pierdas aquí no se recuperan en el siguiente nivel, salvo que vuelva a casa y tenga todas las barras en verde. Salta encima de los bichos para apartarlos. Si te tocan de lado, pierdes una vida. Recoge todas las monedas que puedas: sirven para comprar comida.</p>
+
+<script>window.NIVEL = {{ para_el_juego|tojson }};</script>
+<script src="{{ url_for('static', filename='juego.js') }}"></script>
+{% endblock %}

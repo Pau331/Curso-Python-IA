@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block contenido %}
+
+<section class="cabecera-historia">
+  <h1>Diario de viaje</h1>
+  <p>Cada intento de nivel queda apuntado. Aquí lo analizamos con pandas.</p>
+</section>
+
+{% if not hay_datos %}
+  <p class="aviso aviso-fijo">Todavía no has jugado ningún nivel. <a href="/historia">Sal de aventura</a> y vuelve después.</p>
+{% else %}
+  <div class="totales">
+    <div><b>{{ totales.intentos }}</b>intentos</div>
+    <div><b>{{ totales.monedas }}</b>monedas recogidas</div>
+    <div><b>{{ totales.vidas_perdidas }}</b>vidas perdidas</div>
+    <div><b>{{ totales.minutos_jugados }}</b>minutos de aventura</div>
+  </div>
+
+  <section class="tarjeta-blanca">
+    <h2>Intentos y niveles completados</h2>
+    <img src="/grafica.png?v={{ version }}" alt="Gráfica de intentos y niveles completados por nivel">
+  </section>
+
+  <section class="tarjeta-blanca">
+    <h2>Nivel a nivel</h2>
+    <table class="tabla">
+      <thead>
+        <tr><th>Nivel</th><th>Intentos</th><th>Completados</th><th>Éxito</th><th>Mejor tiempo</th><th>Monedas de media</th><th>Vidas perdidas</th></tr>
+      </thead>
+      <tbody>
+      {% for fila in resumen %}
+        <tr>
+          <td><b>{{ fila.nivel }}.</b> {{ fila.nombre_nivel }}</td>
+          <td>{{ fila.intentos }}</td><td>{{ fila.completados }}</td><td>{{ fila.exito|int }} %</td>
+          <td>{% if fila.mejor_tiempo == fila.mejor_tiempo %}{{ fila.mejor_tiempo }} s{% else %}–{% endif %}</td>
+          <td>{{ fila.monedas_medias }}</td><td>{{ fila.vidas_perdidas }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endif %}
+
+{% endblock %}

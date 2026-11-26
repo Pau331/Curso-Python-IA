@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% from "_mascota.html" import mascota %}
+{% block contenido %}
+
+{% set NECESIDADES = [("comida", "Comida", "🍽️"), ("energia", "Energía", "⚡"), ("diversion", "Diversión", "🎈"), ("limpieza", "Limpieza", "🫧")] %}
+
+{# Un botón de cuidado: mientras la mascota está ocupada, ningún botón funciona #}
+{% macro boton_cuidado(accion, icono, texto) -%}
+  <button class="accion {{ 'en-curso' if actividad and actividad.accion == accion }}" name="accion" value="{{ accion }}" {{ 'disabled' if actividad }}>
+    <span class="icono-accion">{{ icono }}</span>{{ texto }}
+    <small class="cuenta">{% if actividad and actividad.accion == accion %}Ahora mismo…{% else %}Tarda {{ duraciones[accion] }} s{% endif %}</small>
+  </button>
+{%- endmacro %}
+
+<div class="casa">
+  <section class="habitacion">
+    <div class="pared">
+      <div class="ventana" aria-hidden="true"></div>
+      <div class="cuadro" aria-hidden="true">🏡</div>
+    </div>
+    <div class="suelo-casa"></div>
+    {% for clave in m.decoraciones if clave != "gafas" %}
+      <span class="deco deco-{{ clave }}" title="{{ decoraciones[clave].nombre }}">
+        <span class="objeto"><span class="icono-deco">{{ decoraciones[clave].icono }}</span></span>
+      </span>
+    {% endfor %}
+    <div class="protagonista {{ 'haciendo-' ~ actividad.accion if actividad }}">
+      {% if actividad %}
+        <div class="bocadillo ocupado">
+          {{ actividad.icono }} {{ actividad.texto }}…
+          <div class="progreso" data-falta="{{ actividad.falta }}" data-total="{{ actividad.total }}"><span></span></div>
+        </div>
+      {% elif m.aviso() %}<p class="bocadillo">{{ m.aviso() }}</p>{% endif %}
+      {{ mascota(m.animo(), "grande " ~ ("" if actividad else "botando"), m.lleva_gafas()) }}
+      {% if actividad and actividad.accion == "siesta" %}<span class="zzz" aria-hidden="true">Z z z</span>{% endif %}
+      {% if actividad and actividad.accion == "banar" %}<span class="burbujas" aria-hidden="true">🫧 🫧 🫧</span>{% endif %}
+      <h1>{{ m.nombre }}</h1>
+    </div>
+  </section>
+
+  <aside class="panel-necesidades">
+    <h2>Cómo está</h2>
+    {% for clave, nombre, icono in NECESIDADES %}
+      {% set valor = m[clave] %}
+      <div class="necesidad {{ color_de(valor) }}">
+        <span class="icono">{{ icono }}</span>
+        <div>
+          <div class="etiqueta"><span>{{ nombre }}</span><b>{{ valor }}</b></div>
+          <div class="medidor"><span style="width: {{ valor }}%"></span></div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="vidas-casa">
+      <span class="corazones" aria-label="{{ m.vidas }} de {{ vidas_max }} vidas">{{ "♥" * m.vidas }}<span class="vacios">{{ "♥" * (vidas_max - m.vidas) }}</span></span>
+      {% if m.vidas < vidas_max %}
+        <p class="nota">{% if m.todas_en_verde() %}Todo en verde: recuperará sus vidas al salir de aventura.{% else %}Pon las cuatro barras en verde ({{ verde }} o más) para recuperar las vidas.{% endif %}</p>
+      {% else %}
+        <p class="nota">Tiene todas sus vidas.</p>
+      {% endif %}
+    </div>
+  </aside>
+</div>
+
+<form method="post" action="/cuidar" class="acciones">
+  {{ boton_cuidado("banar", "🛁", "Bañar") }}
+  {{ boton_cuidado("jugar", "⚽", "Jugar") }}
+  {{ boton_cuidado("siesta", "😴", "Siesta") }}
+  {% if actividad %}
+    <span class="accion aventura bloqueada" aria-disabled="true"><span class="icono-accion">🗺️</span>Salir de aventura<small class="cuenta">Cuando termine</small></span>
+  {% else %}
+    <a class="accion aventura" href="/historia"><span class="icono-accion">🗺️</span>Salir de aventura</a>
+  {% endif %}
+</form>
+
+<section class="tienda">
+  <h2>Comida</h2>
+  <p class="nota">Comer tarda {{ duraciones.comer }} segundos. Las monedas se consiguen en la aventura.</p>
+  <div class="comidas">
+    {% for clave, c in comidas.items() %}
+      {% set tengo = m.inventario.get(clave, 0) %}
+      <form method="post" action="/cuidar" class="producto">
+        <input type="hidden" name="comida" value="{{ clave }}">
+        <span class="icono-producto">{{ c.icono }}</span>
+        <h3>{{ c.nombre }}</h3>
+        <p>+{{ c.comida }} comida{% if c.diversion %}, +{{ c.diversion }} diversión{% endif %}</p>
+        <p class="cantidad">Tienes {{ tengo }}</p>
+        <button class="boton" name="accion" value="comer" {{ 'disabled' if tengo == 0 or actividad }}>Dar de comer</button>
+        <button class="boton secundario" name="accion" value="comprar" {{ 'disabled' if m.monedas < c.precio }}>Comprar por {{ c.precio }}</button>
+      </form>
+    {% endfor %}
+  </div>
+
+  <h2>Decoración</h2>
+  <p class="nota">Objetos para su casa. Los exclusivos son difíciles de conseguir.
+     ¿Te faltan monedas? <a href="/historia">Repite capítulos</a>: cada meta da premio.</p>
+  <div class="comidas decoraciones">
+    {% for clave, d in decoraciones.items() %}
+      {% set lo_tiene = clave in m.decoraciones %}
+      <form method="post" action="/cuidar" class="producto {{ 'exclusivo' if d.exclusivo }} {{ 'conseguido' if lo_tiene }}">
+        <input type="hidden" name="objeto" value="{{ clave }}">
+        {% if d.exclusivo %}<span class="sello">Exclusivo</span>{% endif %}
+        <span class="icono-producto">{{ d.icono }}</span>
+        <h3>{{ d.nombre }}</h3>
+        {% if lo_tiene %}
+          <p class="cantidad">{{ "¡Ya las lleva puestas!" if clave == "gafas" else "Ya decora su casa" }}</p>
+        {% elif d.precio is none %}
+          <p>{{ d.como }}</p>
+          <p class="cantidad">
+            {% if clave == "gafas" %}Capítulos sin perder vida: {{ m.niveles_sin_fallos | length }} de {{ total_niveles }}.
+            {% elif tiempo_total is none %}Aún no has superado todos los capítulos.
+            {% else %}Tu mejor tiempo total: {{ tiempo_total }} s de {{ limite }} s.{% endif %}
+          </p>
+        {% else %}
+          <button class="boton" name="accion" value="decorar" {{ 'disabled' if m.monedas < d.precio }}>Comprar por {{ d.precio }}</button>
+        {% endif %}
+      </form>
+    {% endfor %}
+  </div>
+</section>
+
+<form method="post" action="/reiniciar" class="reiniciar" onsubmit="return confirm('¿Seguro? Se perderá la mascota y su progreso.');">
+  <button>Empezar de nuevo con otra mascota</button>
+</form>
+
+<script>
+  // Barra de progreso de lo que está haciendo. El tiempo de verdad lo controla Python:
+  // esto solo la anima y, al acabar, recarga la página para ver cómo ha quedado.
+  const progreso = document.querySelector(".progreso");
+  if (progreso) {
+    const falta = Number(progreso.dataset.falta), total = Number(progreso.dataset.total);
+    const barra = progreso.querySelector("span");
+    barra.style.width = `${100 * (total - falta) / total}%`;
+    requestAnimationFrame(() => {
+      barra.style.transition = `width ${falta}s linear`;
+      barra.style.width = "100%";
+    });
+    setTimeout(() => location.reload(), falta * 1000 + 150);
+  }
+</script>
+{% endblock %}
