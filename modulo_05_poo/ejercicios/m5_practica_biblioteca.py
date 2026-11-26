@@ -19,6 +19,27 @@ from datetime import date, timedelta
 MULTA_POR_DIA = 0.20
 
 
+# ------------------------------------------------- excepciones (módulo 6)
+class ErrorDeBiblioteca(ValueError):
+    """Base de los errores de la biblioteca.
+
+    Hereda de ``ValueError`` para que el código que ya capturaba
+    ``ValueError`` (incluidos los tests de la práctica) siga funcionando.
+    """
+
+
+class MaterialNoDisponible(ErrorDeBiblioteca):
+    """El material no existe, ya está prestado o no está prestado."""
+
+
+class SocioNoEncontrado(ErrorDeBiblioteca):
+    """No hay ningún socio con ese número."""
+
+
+class LimiteDePrestamos(ErrorDeBiblioteca):
+    """El socio ya tiene el máximo de materiales prestados."""
+
+
 class Material(ABC):
     """Clase base abstracta de todo lo que se puede prestar."""
 
@@ -45,19 +66,19 @@ class Material(ABC):
     def prestar(self) -> None:
         """Marca el material como no disponible.
 
-        Lanza ``ValueError`` si ya estaba prestado.
+        Lanza ``ErrorDeBiblioteca`` si ya estaba prestado.
         """
         if not self._disponible:
-            raise ValueError(f"{self.codigo} ya está prestado")
+            raise MaterialNoDisponible(f"{self.codigo} ya está prestado")
         self._disponible = False
 
     def devolver(self) -> None:
         """Marca el material como disponible.
 
-        Lanza ``ValueError`` si no estaba prestado.
+        Lanza ``ErrorDeBiblioteca`` si no estaba prestado.
         """
         if self._disponible:
-            raise ValueError(f"{self.codigo} no está prestado")
+            raise MaterialNoDisponible(f"{self.codigo} no está prestado")
         self._disponible = True
 
     def __str__(self) -> str:
@@ -213,10 +234,10 @@ class Biblioteca:
     def anadir_material(self, material: Material) -> None:
         """Añade un material al catálogo.
 
-        Lanza ``ValueError`` si ya hay un material con ese código.
+        Lanza ``ErrorDeBiblioteca`` si ya hay un material con ese código.
         """
         if material.codigo in self:
-            raise ValueError(f"Ya existe el material {material.codigo}")
+            raise ErrorDeBiblioteca(f"Ya existe el material {material.codigo}")
         self._materiales[material.codigo] = material
 
     def buscar(self, codigo: str) -> Material | None:
@@ -265,19 +286,19 @@ class Biblioteca:
 
     # ------------------------------------------------------------ préstamos
     def _material_y_socio(self, codigo: str, numero_socio: int) -> tuple[Material, Socio]:
-        """Devuelve el material y el socio, o lanza ``ValueError`` si alguno no existe."""
+        """Devuelve el material y el socio. Lanza ``ErrorDeBiblioteca`` si alguno no existe."""
         material = self.buscar(codigo)
         if material is None:
-            raise ValueError(f"No existe el material {codigo}")
+            raise MaterialNoDisponible(f"No existe el material {codigo}")
         socio = self.socio(numero_socio)
         if socio is None:
-            raise ValueError(f"No existe el socio {numero_socio}")
+            raise SocioNoEncontrado(f"No existe el socio {numero_socio}")
         return material, socio
 
     def prestar(self, codigo: str, numero_socio: int, fecha: date) -> Prestamo:
         """Presta un material a un socio y devuelve el préstamo creado.
 
-        Lanza ``ValueError`` con uno de estos mensajes, comprobados en este orden:
+        Lanza ``ErrorDeBiblioteca`` con uno de estos mensajes, comprobados en este orden:
 
         - "No existe el material <codigo>"
         - "No existe el socio <numero>"
@@ -289,7 +310,7 @@ class Biblioteca:
         """
         material, socio = self._material_y_socio(codigo, numero_socio)
         if not socio.puede_tomar_prestado():
-            raise ValueError(f"{socio.nombre} ha alcanzado el máximo de préstamos")
+            raise LimiteDePrestamos(f"{socio.nombre} ha alcanzado el máximo de préstamos")
         self._comprobar_reserva(codigo, socio)
         material.prestar()
         socio.prestados.append(material)
@@ -307,13 +328,13 @@ class Biblioteca:
     def devolver(self, codigo: str) -> Prestamo:
         """Registra la devolución de un material y devuelve el préstamo cerrado.
 
-        Lanza ``ValueError`` con el mensaje "No hay ningún préstamo de <codigo>"
+        Lanza ``ErrorDeBiblioteca`` con el mensaje "No hay ningún préstamo de <codigo>"
         si ese material no está prestado. Si lo está: lo marca como
         disponible, lo quita de la lista del socio y elimina el préstamo.
         """
         prestamo = self._prestamo_de(codigo)
         if prestamo is None:
-            raise ValueError(f"No hay ningún préstamo de {codigo}")
+            raise MaterialNoDisponible(f"No hay ningún préstamo de {codigo}")
         prestamo.material.devolver()
         prestamo.socio.prestados.remove(prestamo.material)
         self._prestamos.remove(prestamo)
@@ -340,25 +361,25 @@ class Biblioteca:
     def multa(self, codigo: str, hoy: date) -> float:
         """Ampliación 2: 0,20 € por cada día de retraso del préstamo de ese material.
 
-        Lanza ``ValueError`` si el material no está prestado.
+        Lanza ``ErrorDeBiblioteca`` si el material no está prestado.
         """
         prestamo = self._prestamo_de(codigo)
         if prestamo is None:
-            raise ValueError(f"No hay ningún préstamo de {codigo}")
+            raise MaterialNoDisponible(f"No hay ningún préstamo de {codigo}")
         return round(prestamo.dias_de_retraso(hoy) * MULTA_POR_DIA, 2)
 
     def reservar(self, codigo: str, numero_socio: int) -> int:
         """Ampliación 3: pone al socio en la cola de espera de un material prestado.
 
-        Devuelve su posición en la cola (1 es el primero). Lanza ``ValueError``
+        Devuelve su posición en la cola (1 es el primero). Lanza ``ErrorDeBiblioteca``
         si el material está disponible o si el socio ya lo tiene reservado.
         """
         material, socio = self._material_y_socio(codigo, numero_socio)
         if material.disponible:
-            raise ValueError(f"{codigo} está disponible: no hace falta reservarlo")
+            raise ErrorDeBiblioteca(f"{codigo} está disponible: no hace falta reservarlo")
         cola = self._reservas.setdefault(codigo, [])
         if socio in cola:
-            raise ValueError(f"{socio.nombre} ya tiene reservado {codigo}")
+            raise ErrorDeBiblioteca(f"{socio.nombre} ya tiene reservado {codigo}")
         cola.append(socio)
         return len(cola)
 
@@ -372,5 +393,5 @@ class Biblioteca:
         if not cola:
             return
         if cola[0] != socio:
-            raise ValueError(f"{codigo} está reservado por {cola[0].nombre}")
+            raise MaterialNoDisponible(f"{codigo} está reservado por {cola[0].nombre}")
         cola.pop(0)
