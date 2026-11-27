@@ -11,13 +11,30 @@ import pandas as pd
 from matplotlib.figure import Figure
 
 
+def _barras(ejes, serie: pd.Series) -> None:
+    """Dibuja una barra por elemento de la serie en los ejes indicados."""
+    ejes.bar(serie.index.astype(str), serie.values, color="steelblue")
+    ejes.grid(axis="y", alpha=0.3)
+
+
+def _lineas(ejes, serie: pd.Series) -> None:
+    """Dibuja la serie como una línea con marcadores y rejilla."""
+    ejes.plot(serie.index.astype(str), serie.values, marker="o", color="darkorange")
+    ejes.grid(True, alpha=0.3)
+
+
 def grafico_barras(serie: pd.Series, titulo: str, etiqueta_y: str = "Importe (€)") -> Figure:
     """Devuelve una figura con un gráfico de barras: una barra por elemento de la serie.
 
     El eje X muestra el índice de la serie. La figura lleva el título y la
     etiqueta del eje Y indicados.
     """
-    raise NotImplementedError
+    figura, ejes = plt.subplots(figsize=(8, 5))
+    _barras(ejes, serie)
+    ejes.set_title(titulo)
+    ejes.set_ylabel(etiqueta_y)
+    figura.tight_layout()
+    return figura
 
 
 def grafico_lineas(serie: pd.Series, titulo: str, etiqueta_y: str = "Importe (€)") -> Figure:
@@ -26,12 +43,23 @@ def grafico_lineas(serie: pd.Series, titulo: str, etiqueta_y: str = "Importe (�
     Pensado para la evolución mensual: el índice de la serie va en el eje X.
     La figura lleva título, etiqueta del eje Y y rejilla.
     """
-    raise NotImplementedError
+    figura, ejes = plt.subplots(figsize=(9, 5))
+    _lineas(ejes, serie)
+    ejes.set_title(titulo)
+    ejes.set_ylabel(etiqueta_y)
+    ejes.tick_params(axis="x", rotation=45)
+    figura.tight_layout()
+    return figura
 
 
 def histograma(valores, titulo: str, intervalos: int = 10) -> Figure:
     """Devuelve una figura con el histograma de los valores, con ``intervalos`` barras."""
-    raise NotImplementedError
+    figura, ejes = plt.subplots(figsize=(8, 5))
+    ejes.hist(valores, bins=intervalos, color="steelblue", edgecolor="white")
+    ejes.set_title(titulo)
+    ejes.set_ylabel("Frecuencia")
+    figura.tight_layout()
+    return figura
 
 
 def panel(por_vendedor: pd.Series, mensual: pd.Series, titulo: str) -> Figure:
@@ -41,7 +69,17 @@ def panel(por_vendedor: pd.Series, mensual: pd.Series, titulo: str) -> Figure:
     "Por vendedor". A la derecha, líneas con la evolución mensual, con el
     título "Evolución mensual". ``titulo`` es el título general de la figura.
     """
-    raise NotImplementedError
+    figura, (izquierda, derecha) = plt.subplots(1, 2, figsize=(14, 5))
+    _barras(izquierda, por_vendedor)
+    izquierda.set_title("Por vendedor")
+    izquierda.set_ylabel("Importe (€)")
+    _lineas(derecha, mensual)
+    derecha.set_title("Evolución mensual")
+    derecha.set_ylabel("Importe (€)")
+    derecha.tick_params(axis="x", rotation=45)
+    figura.suptitle(titulo)
+    figura.tight_layout()
+    return figura
 
 
 def guardar(figura: Figure, ruta: str | Path) -> Path:
@@ -49,4 +87,8 @@ def guardar(figura: Figure, ruta: str | Path) -> Path:
 
     Crea la carpeta de destino si no existe.
     """
-    raise NotImplementedError
+    ruta = Path(ruta)
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    figura.savefig(ruta, format="png", dpi=150)
+    plt.close(figura)
+    return ruta
